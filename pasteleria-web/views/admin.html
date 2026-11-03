@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel · Flor de Izote</title><link rel="icon" type="image/png" href="/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css"></head>
+<body>
+<div class="topbar"><button id="tb"><i data-lucide="menu"></i></button><b class="serif">Flor de Izote · Admin</b></div>
+<div class="admin">
+  <aside class="side" id="side">
+    <a class="brand" href="/" style="padding:0 6px"><img src="/images/logo.png" alt="Logo"><span><b>Flor de Izote</b><small>Administración</small></span></a>
+    <a data-s="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+    <a data-s="pedidos"><i data-lucide="clipboard-list"></i> Pedidos</a>
+    <a data-s="productos"><i data-lucide="package"></i> Productos</a>
+    <a data-s="categorias"><i data-lucide="tag"></i> Categorías</a>
+    <a data-s="clientes"><i data-lucide="users"></i> Clientes</a>
+    <a data-s="encargos"><i data-lucide="cake"></i> Encargos</a>
+    <a data-s="pagos"><i data-lucide="credit-card"></i> Pagos</a>
+    <a data-s="facturas"><i data-lucide="receipt"></i> Facturas</a>
+    <div class="sp"></div>
+    <a id="logout"><i data-lucide="log-out"></i> Cerrar sesión</a>
+  </aside>
+  <main class="main"><div id="content"></div></main>
+</div>
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+<script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/admin.js"></script>
+</body></html>

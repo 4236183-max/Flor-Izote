@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factura · Flor de Izote</title><link rel="icon" type="image/png" href="/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css"></head>
+<body>
+<div class="noprint"><button class="btn" onclick="window.print()">🖨️ Imprimir</button><button class="btn rosa" onclick="window.print()">📄 Guardar como PDF</button><a class="btn ghost" href="/">Volver</a></div>
+<p class="noprint note" style="margin-top:8px">Para guardar como PDF, elige "Guardar como PDF" como destino en el cuadro de impresión.</p>
+<main class="factura" id="f"><p>Cargando…</p></main>
+<script src="/js/common.js"></script>
+<script>
+(async () => {
+  const q = new URLSearchParams(location.search);
+  try {
+    const d = await api(`/api/public/factura?numero=${encodeURIComponent(q.get('numero') || '')}&telefono=${encodeURIComponent(q.get('telefono') || '')}`);
+    const num = 'FAC-' + String(d.factura.numero).padStart(6, '0');
+    $('#f').innerHTML = `
+      <header><div class="brand"><img src="/images/logo.png" alt="Logo" width="60" height="60"><span><b class="serif" style="font-size:1.5rem">Flor de Izote</b><br><small>Pastelería artesanal · Apopa, San Salvador</small></span></div>
+      <div style="text-align:right"><h2 class="serif">Factura ${num}</h2><small>${fdate(d.factura.fecha_emision)}</small><br><small>Pedido ${esc(d.pedido.numero)}</small></div></header>
+      <p><b>Cliente:</b> ${esc(d.cliente.nombre)}<br><b>Teléfono:</b> ${esc(d.cliente.telefono)}${d.cliente.direccion ? `<br><b>Dirección:</b> ${esc(d.cliente.direccion)}` : ''}</p>
+      <table style="margin-top:16px"><thead><tr><th>Producto</th><th>Cant.</th><th>P. unitario</th><th>Subtotal</th></tr></thead><tbody>
+      ${d.items.map((i) => `<tr><td>${esc(i.nombre_producto)}</td><td>${i.cantidad}</td><td>${money(i.precio_unitario)}</td><td>${money(i.subtotal)}</td></tr>`).join('')}</tbody></table>
+      <p class="tot">Subtotal: ${money(d.pedido.total)}<br><b>Total: ${money(d.pedido.total)}</b></p>
+      <p style="margin-top:12px"><b>Método de pago:</b> ${esc(d.pago.metodo)} · <b>Estado de pago:</b> ${esc(d.pago.estado)}</p>
+      <p class="legal">Factura simulada para fines académicos. No constituye un comprobante fiscal autorizado.</p>`;
+  } catch (e) { $('#f').innerHTML = `<p>${esc(e.message)}</p>`; }
+})();
+</script></body></html>
