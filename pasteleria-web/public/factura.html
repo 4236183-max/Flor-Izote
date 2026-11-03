@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factura · Flor de Izote</title><link rel="icon" type="image/png" href="/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+.dte{max-width:820px;font-size:.84rem;padding:28px}
+.dte h1{font:700 1rem 'Poppins',sans-serif;text-align:center;letter-spacing:.04em}
+.dte .sub{text-align:center;font-weight:600;margin-bottom:12px}
+.dte .meta{display:grid;grid-template-columns:1fr 150px;gap:14px;border:1px solid #cdb9a8;border-radius:10px;padding:12px;margin-bottom:12px}
+.dte .meta dl{display:grid;grid-template-columns:190px 1fr;gap:3px 8px}.dte dt{font-weight:600}.dte dd{word-break:break-all}
+.dte .qr{border:1px dashed #b9a493;border-radius:8px;display:grid;place-items:center;text-align:center;font-size:.68rem;color:var(--choco-l);padding:8px}
+.dte .cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.dte .box{border:1px solid #cdb9a8;border-radius:10px;padding:10px 12px}.dte .box h3{font:700 .8rem 'Poppins',sans-serif;background:var(--crema2);margin:-10px -12px 8px;padding:6px 12px;border-radius:10px 10px 0 0;letter-spacing:.05em}
+.dte .box p{margin-bottom:2px}.dte table th,.dte table td{padding:7px 8px;font-size:.8rem}.dte td.n,.dte th.n{text-align:right}
+.dte .res{margin-left:auto;width:min(360px,100%);margin-top:10px}.dte .res div{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dotted #cdb9a8}
+.dte .res .tot{font-weight:700;font-size:1rem;border-bottom:2px solid var(--choco)}
+.dte .letras{margin-top:10px;font-weight:600}
+.dte .legal{margin-top:16px;font-size:.74rem;border:1px dashed var(--bad);color:var(--bad);padding:10px;border-radius:8px;text-align:center}
+@media(max-width:640px){.dte .meta,.dte .cols2{grid-template-columns:1fr}.dte .meta dl{grid-template-columns:1fr}}
+</style></head>
+<body>
+<div class="noprint"><button class="btn" onclick="window.print()">🖨️ Imprimir</button><button class="btn rosa" onclick="window.print()">📄 Guardar como PDF</button><a class="btn ghost" href="/">Volver</a></div>
+<p class="noprint note" style="margin-top:8px">Para guardar como PDF, elige "Guardar como PDF" como destino en el cuadro de impresión.</p>
+<main class="factura dte" id="f"><p>Cargando…</p></main>
+<script src="/js/common.js"></script>
+<script src="/js/letras.js"></script>
+<script>
+(async () => {
+  const q = new URLSearchParams(location.search);
+  try {
+    const d = await api(`/api/public/factura?numero=${encodeURIComponent(q.get('numero') || '')}&telefono=${encodeURIComponent(q.get('telefono') || '')}`);
+    const e = d.emisor, c = d.calculo, f = d.factura;
+    const forma = { Efectivo: 'Billetes y monedas', Tarjeta: 'Tarjeta de crédito/débito', Transferencia: 'Transferencia – depósito bancario' }[d.pago.metodo] || d.pago.metodo;
+    const fecha = new Date(f.fecha_emision);
+    const fh = fecha.toLocaleDateString('es-SV', { timeZone: 'America/El_Salvador' }) + ' — ' + fecha.toLocaleTimeString('es-SV', { timeZone: 'America/El_Salvador', hour12: false });
+    $('#f').innerHTML = `
+      <h1>DOCUMENTO TRIBUTARIO ELECTRÓNICO</h1><p class="sub">FACTURA DE CONSUMIDOR FINAL (Tipo 01) · REPRESENTACIÓN GRÁFICA SIMULADA</p>
+      <div class="meta"><dl>
+        <dt>Código de generación</dt><dd>${esc(f.codigo_generacion)}</dd>
+        <dt>Número de control</dt><dd>${esc(f.numero_control)}</dd>
+        <dt>Sello de recepción</dt><dd>NO APLICA — no transmitido al Ministerio de Hacienda</dd>
+        <dt>Modelo de facturación</dt><dd>Modelo facturación previo (simulado)</dd>
+        <dt>Tipo de transmisión</dt><dd>No transmitido (simulación académica)</dd>
+        <dt>Fecha y hora de generación</dt><dd>${esc(fh)}</dd>
+        <dt>Moneda</dt><dd>USD – Dólar de los Estados Unidos</dd>
+        <dt>Correlativo interno</dt><dd>FAC-${String(f.numero).padStart(6, '0')} · Pedido ${esc(d.pedido.numero)}</dd>
+      </dl><div class="qr">Código QR de consulta no disponible: el documento no fue transmitido a Hacienda</div></div>
+      <div class="cols2">
+        <div class="box"><h3>EMISOR</h3>
+          <p><b>${esc(e.nombre)}</b></p><p>Nombre comercial: ${esc(e.nombreComercial)}</p>
+          <p>NIT: ${esc(e.nit)} · NRC: ${esc(e.nrc)}</p><p>Actividad económica: ${esc(e.actividad)}</p>
+          <p>${esc(e.tipoEstablecimiento)} · Estab. ${esc(e.establecimiento)} · P.V. ${esc(e.puntoVenta)}</p>
+          <p>${esc(e.direccion)}</p><p>Tel.: ${esc(e.telefono)} · ${esc(e.correo)}</p></div>
+        <div class="box"><h3>RECEPTOR</h3>
+          <p><b>${esc(d.cliente.nombre)}</b></p><p>Documento de identificación: no requerido (consumidor final)</p>
+          <p>Teléfono: ${esc(d.cliente.telefono)}</p>${d.cliente.correo ? `<p>Correo: ${esc(d.cliente.correo)}</p>` : ''}${d.cliente.direccion ? `<p>Dirección: ${esc(d.cliente.direccion)}</p>` : ''}</div>
+      </div>
+      <div class="tablewrap" style="box-shadow:none;border:1px solid #cdb9a8"><table><thead><tr><th>N°</th><th>Cant.</th><th>Unidad</th><th>Descripción</th><th class="n">Precio unit. (IVA incl.)</th><th class="n">Desc.</th><th class="n">Ventas gravadas</th></tr></thead><tbody>
+      ${d.items.map((i, k) => `<tr><td>${k + 1}</td><td>${i.cantidad}</td><td>Unidad</td><td>${esc(i.nombre_producto)}</td><td class="n">${money(i.precio_unitario)}</td><td class="n">$0.00</td><td class="n">${money(i.subtotal)}</td></tr>`).join('')}</tbody></table></div>
+      <div class="res">
+        <div><span>Suma de ventas gravadas (IVA incluido)</span><b>${money(c.total)}</b></div>
+        <div><span>Descuentos</span><b>$0.00</b></div>
+        <div><span>Monto total de la operación</span><b>${money(c.total)}</b></div>
+        <div><span>IVA 13% incluido en el precio</span><b>${money(c.iva)}</b></div>
+        <div><span>Base imponible (sin IVA)</span><b>${money(c.base)}</b></div>
+        <div class="tot"><span>TOTAL A PAGAR</span><b>${money(c.total)}</b></div>
+      </div>
+      <p class="letras">Valor en letras: ${esc(aLetras(c.total))}</p>
+      <p style="margin-top:8px"><b>Condición de la operación:</b> Contado · <b>Forma de pago:</b> ${esc(forma)} · <b>Estado de pago:</b> ${esc(d.pago.estado)}</p>
+      <p class="legal"><b>FACTURA SIMULADA PARA FINES ACADÉMICOS.</b> Este documento reproduce la estructura de una factura electrónica (DTE) de El Salvador, pero no ha sido firmado ni transmitido al Ministerio de Hacienda, no cuenta con Sello de Recepción y no constituye un comprobante fiscal autorizado. Los datos fiscales del emisor son de ejemplo.</p>`;
+  } catch (er) { $('#f').innerHTML = `<p>${esc(er.message)}</p>`; }
+})();
+</script></body></html>

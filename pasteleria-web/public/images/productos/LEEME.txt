@@ -1,0 +1,18 @@
+Coloca aquí las fotos del catálogo (JPG/PNG/WEBP, cuadradas, ~800x800 px, menos de 300 KB).
+Nombres que usa el catálogo inicial:
+
+tres-leches-clasico.jpg
+pastel-de-chocolate.jpg
+red-velvet.jpg
+cupcake-de-vainilla.jpg
+cupcake-de-fresa.jpg
+galletas-de-chispas-de-chocolate.jpg
+alfajores-de-dulce-de-leche.jpg
+flan-de-caramelo.jpg
+cheesecake-de-frutos-rojos.jpg
+tarta-de-frutas.jpg
+pionono-de-fresa.jpg
+caja-regalo.jpg
+
+Si no existe la foto, el sitio muestra un ícono. Para productos nuevos, sube la foto desde el panel (Cloudinary)
+o usa: npm run imagenes  (vincula fotos de esta carpeta con el nombre del producto en slug).
