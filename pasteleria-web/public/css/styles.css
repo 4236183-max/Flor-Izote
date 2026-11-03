@@ -1,19 +1,4 @@
-:root {
-    --crema: #F4F7EF;
-    --crema2: #E2EBD9;
-    --rosa: #D5E5D0;
-    --rosa-d: #648B61;
-    --choco: #243D2B;
-    --choco-l: #526B55;
-    --caramelo: #C69B48;
-    --verde: #47734D;
-    --ok: #2E8B57;
-    --warn: #D98E04;
-    --bad: #C0394F;
-    --radius: 18px;
-    --sombra: 0 10px 30px rgba(36,61,43,.12);
-    font-family: 'Poppins', system-ui, sans-serif;
-}
+FF8F1;--crema2:#F8EBDD;--rosa:#F4C6CF;--rosa-d:#D96A86;--choco:#3E2723;--choco-l:#6D4C41;--caramelo:#C58A55;--verde:#4F7A5A;--ok:#2E8B57;--warn:#D98E04;--bad:#C0394F;--radius:18px;--sombra:0 10px 30px rgba(75,46,38,.12);font-family:'Poppins',system-ui,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
 body{background:var(--crema);color:var(--choco);line-height:1.55}
 h1,h2,h3,.serif{font-family:'Playfair Display',Georgia,serif;line-height:1.15}
